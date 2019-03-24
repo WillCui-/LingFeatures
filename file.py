@@ -1,8 +1,12 @@
 import tkinter
-from tkinter import BOTH
+from tkinter import *
 
 screen = tkinter.Tk()
 screen.wm_title("Feature Classes")
+
+classes = ['consonantal', 'sonorant', 'continuant', 'delayed release', 'approximant', 'tap', 'trill', 'nasal', 'voice',
+           'spread glottis', 'constricted glottis', 'labial', 'round', 'labiodental', 'coronal', 'anterior',
+           'distributed', 'strident', 'lateral', 'dorsal', 'high', 'low', 'front', 'back', 'tense']
 
 phones = {'p': [(0, 0), [0, 11], [15, 16, 17, 20, 21, 22, 23, 24]],
           'b': [(1, 0), [0, 8, 11], [15, 16, 17, 20, 21, 22, 23, 24]],
@@ -65,17 +69,27 @@ phones = {'p': [(0, 0), [0, 11], [15, 16, 17, 20, 21, 22, 23, 24]],
 buttons = []
 frames = []
 
-for i in range(len(phones)):
-    text = list(phones.keys())[i]
+ipa_chart = tkinter.Frame(screen, padx=20, pady=20)
+ipa_chart.pack()
 
-    frame = tkinter.Frame(screen, width=30, height=30)
-    button = tkinter.Button(frame, text=text)
+entry = tkinter.Frame(screen)
+entry.pack()
+
+for i in range(len(phones)):
+    button_text = list(phones.keys())[i]
+
+    frame = tkinter.Frame(ipa_chart, width=30, height=30, borderwidth=1, relief=RIDGE)
+    frame.propagate(False)
+    frame.grid(row=phones[button_text][0][1], column=phones[button_text][0][0], sticky="nsew")
+
+    button = tkinter.Button(frame, text=button_text, borderwidth=0, bg="#77DD77", activebackground="#575A61",
+                            activeforeground="#D0DB97")
+    button.pack(expand=True, fill=BOTH)
 
     frames.append(frame)
     buttons.append(button)
 
-    frame.propagate(False)
-    frame.grid(row=phones[text][0][1], column=phones[text][0][0], sticky="nsew")
-    button.pack(expand=True, fill=BOTH)
+text = tkinter.Text(entry)
+text.pack()
 
 screen.mainloop()
