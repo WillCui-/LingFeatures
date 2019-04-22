@@ -136,7 +136,7 @@ class Main:
 
             button = tk.Button(frame, text=button_text, borderwidth=0, bg="#77DD77", activebackground="#575A61",
                                activeforeground="#D0DB97", command=partial(self.add_phone, button_text),
-                               font=('Helvetica', 14))
+                               font=('Doulos SIL', 14))
             button.pack(expand=True, fill=BOTH)
 
             self.frames.append(frame)
@@ -183,7 +183,7 @@ class Main:
         self.feature_text.pack(side=LEFT)
 
         self.output_text = tk.Label(self.out_frame)
-        self.output_text.config(font=('Calibri', 12))
+        self.output_text.config(font=('Doulos SIL', 12))
         self.output_text.pack()
 
     # Finds sounds containing the features
