@@ -31,9 +31,23 @@ def find_sounds(features):
         if feature not in classes:
             raise Exception("Feature {} does not exist".format(feature))
 
+    print(classes.index('round'))
     for phone in phones.keys():
         if all(classes.index(feature) in phones[phone][1] for feature in features):
             output.append(phone)
+
+    return output
+
+
+# Find the zeros for the sound
+def find_zeros(sounds):
+    if len(sounds) == 0:
+        return []
+
+    output = phones[sounds[0]][2]
+
+    for sound in sounds[1:]:
+        output = [s for s in output if s in phones[sound][2]]
 
     return output
 
@@ -52,6 +66,7 @@ class Main:
 
         self.ipa_chart = Tkinter.Frame(self.screen, padx=20, pady=20)  # create the frame for the IPA
         self.ipa_chart.pack()
+        self.ipa_chart.columnconfigure(22, minsize=30)
 
         self.feature_chart = Tkinter.Frame(self.screen, padx=20, pady=20)
         self.feature_chart.pack()
@@ -142,10 +157,16 @@ class Main:
     def display_phone(self):
         output = find_feature(self.selected_phones)
         output = [classes[i] for i in output]
-        if len(output) == 0:
+        zeros = find_zeros(self.selected_phones)
+        zeros = [classes[i] for i in zeros]
+        if len(output) == 0 and len(zeros) == 0:
             self.output_text.config(text="no similar features")
-        else:
+        elif len(output) > 0 and len(zeros) > 0:
+            self.output_text.config(text="[+{}, 0{}]".format(", +".join(output), ", 0".join(zeros)))
+        elif len(zeros) == 0:
             self.output_text.config(text="[+{}]".format(", +".join(output)))
+        else:
+            self.output_text.config(text="[0{}]".format(", 0".join(zeros)))
 
     def display_feature(self):
         output = find_sounds(self.selected_features)
