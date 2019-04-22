@@ -7,6 +7,13 @@ from functools import partial
 
 class Main:
     def __init__(self, screen):
+        self.ordered_phones = ['p', 'b', 't', 'd', 'ʈ', 'ɖ', 'c', 'ɟ', 'k', 'g', 'q', 'ɢ', 'ʔ', 'm', 'ɱ', 'n', 'ɳ', 'ɲ',
+                               'ŋ', 'ɴ', 'ʙ', 'r', 'ʀ', 'ɾ', 'ɽ', 'ɸ', 'β', 'f', 'v', 'θ', 'ð', 's', 'z', 'ʃ', 'ʒ', 'ʂ',
+                               'ʐ', 'ç', 'ʝ', 'x', 'ɣ', 'χ', 'ʁ', 'ħ', 'ʕ', 'h', 'ɦ', 'p͡f', 't͡ɬ', 't͡s', 'd͡z', 't͡ʃ',
+                               'd͡ʒ', 'k͡x', 'ɬ', 'ɮ', 'ʋ', 'ɹ', 'ɻ', 'j', 'l', 'ɭ', 'ʎ', 'ʟ', 'i', 'y', 'ɨ', 'ʉ', 'ɯ',
+                               'u', 'ɪ', 'ʏ', 'ʊ', 'e', 'ø', 'ɘ', 'ɵ', 'ɤ', 'o', 'ɛ', 'œ', 'ə', 'ɞ', 'ʌ', 'ɔ', 'æ', 'a',
+                               'ɶ', 'ɑ', 'ɒ', 'w', 'ʍ', 'ɥ', 'ɕ', 'ʑ', 't͡ɕ', 'd͡ʑ']
+
         # in format (x, y), [+ locations], [0 locations]
         self.phones = {'p': [(0, 0), [0, 11], [15, 16, 17, 20, 21, 22, 23, 24]],
                        'b': [(1, 0), [0, 8, 11], [15, 16, 17, 20, 21, 22, 23, 24]],
@@ -97,12 +104,64 @@ class Main:
                        'a': [(23, 6), [25, 21], [24]],
                        'ɶ': [(24, 6), [25, 21, 22, 12], [24]],
                        'ɑ': [(30, 6), [25, 21, 23], [24]],
-                       'ɒ': [(31, 6), [25, 21, 23, 12], [24]]}
+                       'ɒ': [(31, 6), [25, 21, 23, 12], [24]],
+                       'w': [(23, 8), [1, 2, 4, 8, 11, 12, 19, 20, 23, 24], [3, 15, 16, 17]],
+                       'ʍ': [(24, 8), [2, 3, 9, 11, 12, 19, 20, 23, 24], [15, 16, 17]],
+                       'ɥ': [(25, 8), [1, 2, 4, 8, 11, 12, 19, 20, 22, 24], [3, 15, 16, 17]],
+                       'ɕ': [(26, 8), [0, 2, 3, 14, 15, 16, 17, 19, 20, 22], [24]],
+                       'ʑ': [(27, 8), [0, 2, 3, 8, 14, 15, 16, 17, 19, 20, 22], [24]],
+                       't͡ɕ': [(28, 8), [0, 3, 14, 15, 16, 17, 19, 20, 22], [24]],
+                       'd͡ʑ': [(29, 8), [0, 3, 8, 14, 15, 16, 17, 19, 20, 22], [24]]}
 
         self.classes = ['consonantal', 'sonorant', 'continuant', 'delayed release', 'approximant', 'tap', 'trill',
                         'nasal', 'voice', 'spread glottis', 'constricted glottis', 'labial', 'round', 'labiodental',
                         'coronal', 'anterior', 'distributed', 'strident', 'lateral', 'dorsal', 'high', 'low', 'front',
                         'back', 'tense', 'syllabic']
+
+        self.class_descriptions = {'consonantal': 'radical constriction in the vocal tract | +: liquids, nasals, '
+                                               'fricatives, affricates, stops | -: vowels, glides',
+                                   'sonorant': 'spontaneous voicing is possible | +: vowels, glides, liquids, nasals | '
+                                               '-: fricatives, affricates, stops (obstruents)',
+                                   'continuant': 'airflow out of the mouth is continuous | +: vowels, glides, liquids,'
+                                                 'fricatives | -: nasals, affricates, stops',
+                                   'delayed release': 'release produces frication (obstruents only) | +: fricatives, '
+                                                      'affricates, | -: stops',
+                                   'approximant': 'frictionless escape of air out of the mouth | +: vowels, glides, '
+                                                  'liquids | -: nasals, fricatives, affricats, stops',
+                                   'tap': 'tapping of articulator | +: taps | -: all other consonants',
+                                   'trill': 'trilling of articiulator | +: trills | -: all other consonants',
+                                   'nasal': 'airflow out of the nasal cavity | +: nasals | -: other',
+                                   'voice': 'vibration of the vocal cords | +: voiced sounds | -: voiceless sounds',
+                                   'spread glottis': 'vocal folds held far apart | +:  aspirated consonants, breathy '
+                                                     'vowels, glottal fricatives | -: all other sounds',
+                                   'constricted glottis': 'narrow or closed glottis | +: ejectives, glottal stop, '
+                                                          'creaky voice, preglottalized sounds | -: all other sounds',
+                                   'labial': 'articulated with lips | +: bilabials, labiodentals | -: all other '
+                                             'consonants',
+                                   'round': 'articulated with lips rounded | +: rounded labials | -: all other '
+                                            'consonants (except secondary rounding)',
+                                   'labiodental': 'articulated with lower lip on upper teeth | +: labiodentals | -: all '
+                                                  'other consonants',
+                                   'coronal': 'articulated with the tongue blade or tip | +: dentals, alveolars, '
+                                              'palato-alveolars, retroflexes, palatals | -: all other consonants',
+                                   'anterior': 'articulated at alveolar ridge or forward (coronals only) | +: dentals, '
+                                               'alveolars | -: palato-alveolars, retroflexes, palatals',
+                                   'distributed': 'articulated with tongue blade (coronals only) | +: dentals, '
+                                                  'palato-alveolars, palatals | -: alveolars, retroflexes',
+                                   'strident': 'air channeled through tongue at teeth (coronals only) | +: '
+                                               'alveolar/palato-alveolar/alveolopalatal fricatives and affricates | -: '
+                                               'all other coronals (non-sibilants)',
+                                   'lateral': 'air passes around the sides of the tongue | +: laterals | -: '
+                                              'all other consonants',
+                                   'dorsal': 'articulated with the tongue body | +: velars, uvulars, pharyngeals | '
+                                             '-: all other consonants',
+                                   'high': 'tongue above neutral position | +: high vowels | -: low and mid vowels',
+                                   'low': 'tongue below neutral position | +: low vowels | -: high and mid vowels',
+                                   'front': 'tongue fronted | +: front vowels | -: back and central vowels',
+                                   'back': 'tongue retracted | +: back vowels | -: front and central vowels',
+                                   'tense': 'longer duration, higher height (mid and high vowels only) | +: tense '
+                                            'vowels | -: lax vowels',
+                                   'syllabic': 'can be the peak/nucleus of a syllable | +: vowels | -: consonants'}
 
         self.screen = screen  # create the window
         self.screen.wm_title("Feature Classes")
@@ -135,7 +194,7 @@ class Main:
         self.out_frame.pack()
 
         for i in range(len(self.phones)):
-            button_text = list(self.phones.keys())[i]
+            button_text = self.ordered_phones[i]
 
             frame = tk.Frame(self.ipa_chart, width=30, height=30, borderwidth=1, relief=RIDGE)
             frame.propagate(False)
@@ -190,7 +249,7 @@ class Main:
         self.feature_text.pack(side=LEFT)
 
         self.output_text = tk.Label(self.out_frame)
-        self.output_text.config(font=('Doulos SIL', 12))
+        self.output_text.config(font=('Doulos SIL', 12), justify=LEFT)
         self.output_text.pack()
 
     # Finds sounds containing the features
@@ -204,10 +263,11 @@ class Main:
             if feature not in self.classes:
                 raise Exception("Feature {} does not exist".format(feature))
 
-        for phone in self.phones.keys():
+        for phone in self.ordered_phones:
             if all(self.classes.index(feature) in self.phones[phone][1] for feature in features):
                 output.append(phone)
 
+        output.sort(key=lambda x: self.ordered_phones.index(x))
         return output
 
     # Find the zeros for the sound
@@ -254,25 +314,47 @@ class Main:
         self.output_text.config(text="")
 
     def display_phone(self):
-        output = self.find_feature(self.selected_phones)
-        output = [self.classes[i] for i in output]
+        output_nums = self.find_feature(self.selected_phones)
+        output = [self.classes[i] for i in output_nums]
         zeros = self.find_zeros(self.selected_phones)
         zeros = [self.classes[i] for i in zeros]
         if len(output) == 0 and len(zeros) == 0:
-            self.output_text.config(text="no similar features")
+            output_text = "no similar features"
         elif len(output) > 0 and len(zeros) > 0:
-            self.output_text.config(text="[+{}, 0{}]".format(", +".join(output), ", 0".join(zeros)))
+            output_text = "[+{}, 0{}]".format(", +".join(output), ", 0".join(zeros))
         elif len(zeros) == 0:
-            self.output_text.config(text="[+{}]".format(", +".join(output)))
+            output_text = "[+{}]".format(", +".join(output))
         else:
-            self.output_text.config(text="[0{}]".format(", 0".join(zeros)))
+            output_text = "[0{}]".format(", 0".join(zeros))
+
+        output_text += "\n"
+
+        if len(self.selected_phones) > 1:
+            for phone in self.selected_phones:
+                append = [feature for feature in self.find_feature([phone]) if feature not in output_nums]
+                append = [self.classes[i] for i in append]
+                if len(append) > 0:
+                    output_text += phone
+                    output_text += ": "
+                    output_text += "+{}".format(" +".join(append))
+                    output_text += "\n"
+
+        self.output_text.config(text=output_text)
 
     def display_feature(self):
         output = self.find_sounds(self.selected_features)
         if len(output) == 0:
-            self.output_text.config(text="no phones")
+            output_text = "no phones \n"
         else:
-            self.output_text.config(text="/{}/".format("/ /".join(output)))
+            output_text = "/{}/".format("/ /".join(output))
+            output_text += "\n"
+
+        for feature in self.selected_features:
+            output_text += feature + ": "
+            output_text += self.class_descriptions[feature]
+            output_text += "\n"
+
+        self.output_text.config(text=output_text)
 
 
 root = Tk()
