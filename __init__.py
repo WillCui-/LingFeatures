@@ -62,4 +62,3 @@ phones = {'p': [(0, 0), [0, 11], [15, 16, 17, 20, 21, 22, 23, 24]],
 classes = ['consonantal', 'sonorant', 'continuant', 'delayed release', 'approximant', 'tap', 'trill', 'nasal', 'voice',
            'spread glottis', 'constricted glottis', 'labial', 'round', 'labiodental', 'coronal', 'anterior',
            'distributed', 'strident', 'lateral', 'dorsal', 'high', 'low', 'front', 'back', 'tense']
-
